@@ -2,8 +2,8 @@
 
 **Trabajo de Fin de Grado — Grado en Comercio**  
 **Autor:** Jan Calsina Varela  
-**Universidad:** [Universidad Complutense de Madrid]  
-**Tutor:** [Arturo Benayas Ayuso]  
+**Universidad:** Universidad Complutense de Madrid
+**Tutor:** Arturo Benayas Ayuso
 **Año:** 2026
 
 ---
