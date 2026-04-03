@@ -1,9 +1,9 @@
 # Análisis estadístico de señales de riesgo en contratación pública española (2019–2025)
 
 **Trabajo de Fin de Grado — Grado en Comercio**  
-**Autor:** Jan Calsina Viñas  
-**Universidad:** [nombre de tu universidad]  
-**Tutor:** [nombre de tu tutor]  
+**Autor:** Jan Calsina Varela  
+**Universidad:** [Universidad Complutense de Madrid]  
+**Tutor:** [Arturo Benayas Ayuso]  
 **Año:** 2026
 
 ---
