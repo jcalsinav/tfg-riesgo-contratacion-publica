@@ -21,24 +21,25 @@ El enfoque es estrictamente estadístico y no acusatorio: los indicadores identi
 ## Estructura del repositorio
 tfg-riesgo-contratacion-publica/
 │
-├── scripts/
-│   ├── pipeline/
-│   │   ├── 01_borme_placsp_match.py          # Cruce BORME × adjudicatarios + flags corporativos (F1–F5)
-│   │   ├── 02_indicadores_comportamiento.py   # Cálculo de indicadores de comportamiento (B1–B6)
-│   │   ├── 03_irc_construccion.py             # Construcción del IRC por NIF × CCAA × CPV
-│   │   ├── 04_analisis_descriptivo.py         # Estadísticos descriptivos generales
-│   │   ├── 05_estabilidad_temporal.py         # Estabilidad temporal + rankings territoriales
-│   │   ├── 06_procedimientos_kruskal.py       # Kruskal-Wallis por procedimiento y tipo de contrato
-│   │   ├── 07_regresion_mco.py                # Modelo MCO + logit (IRC ~ importe + procedimiento)
-│   │   └── 08_robustez.py                     # Análisis de sensibilidad de pesos del IRC
-│   │
-│   └── visualization/
-│       ├── figura1_distribucion_irc.py        # Histograma + densidad del IRC
-│       ├── figura2_irc_territorial.py         # IRC agregado por territorio (barras horizontales)
-│       ├── figura3_irc_procedimiento.py       # IRC por nivel de concurrencia (boxplot)
-│       ├── figura4_prevalencia_flags.py       # Prevalencia de flags F1–F5 y B1–B6
-│       ├── figura5_scatter_importe.py         # Scatter IRC vs log(importe)
-│       └── figura6_estabilidad_temporal.py    # Estabilidad temporal de rankings
+│
+├── pipeline/
+│   ├── script_01_calcular_flags_corporativos.py
+│   ├── script_02_calcular_indicadores_comportamiento.py
+│   ├── script_03_calcular_irc.py
+│   ├── script_04_tablas_descriptivas.py
+│   ├── script_05_mapa_territorio_sector.py
+│   ├── script_06_analisis_bivariado.py
+│   ├── script_07_modelos_regresion.py
+│   └── script_08_validaciones_robustez.py
+│
+├── visualization/
+│   ├── figura1_distribucion_irc.py
+│   ├── figura2_irc_territorial.py
+│   ├── figura3_irc_procedimiento.py
+│   ├── figura4_prevalencia_flags.py
+│   ├── figura5_scatter_irc_importe.py
+│   └── figura6_estabilidad_temporal.py
+│
 │
 ├── requirements.txt                           # Dependencias Python
 └── README.md
