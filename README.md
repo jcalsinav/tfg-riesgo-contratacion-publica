@@ -84,16 +84,15 @@ pip install -r requirements.txt
 
 Ejecuta los scripts del pipeline en orden estricto (01 → 08), ya que cada script consume los outputs del anterior:
 ```bash
-python scripts/pipeline/01_borme_placsp_match.py
-python scripts/pipeline/02_indicadores_comportamiento.py
-python scripts/pipeline/03_irc_construccion.py
-# ... y así sucesivamente hasta el 08
+python visualization/figura1_distribucion_irc.py
+python visualization/figura2_irc_territorial.py
+# ... etc.
 ```
 
 Una vez completado el pipeline, genera las figuras:
 ```bash
-python scripts/visualization/figura1_distribucion_irc.py
-python scripts/visualization/figura2_irc_territorial.py
+python visualization/figura1_distribucion_irc.py
+python visualization/figura2_irc_territorial.py
 # ... etc.
 ```
 
