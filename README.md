@@ -32,7 +32,7 @@ tfg-riesgo-contratacion-publica/
 │   │   ├── 07_regresion_mco.py                # Modelo MCO + logit (IRC ~ importe + procedimiento)
 │   │   └── 08_robustez.py                     # Análisis de sensibilidad de pesos del IRC
 │   │
-│   └── visualizacion/
+│   └── visualization/
 │       ├── figura1_distribucion_irc.py        # Histograma + densidad del IRC
 │       ├── figura2_irc_territorial.py         # IRC agregado por territorio (barras horizontales)
 │       ├── figura3_irc_procedimiento.py       # IRC por nivel de concurrencia (boxplot)
@@ -91,8 +91,8 @@ python scripts/pipeline/03_irc_construccion.py
 
 Una vez completado el pipeline, genera las figuras:
 ```bash
-python scripts/visualizacion/figura1_distribucion_irc.py
-python scripts/visualizacion/figura2_irc_territorial.py
+python scripts/visualization/figura1_distribucion_irc.py
+python scripts/visualization/figura2_irc_territorial.py
 # ... etc.
 ```
 
