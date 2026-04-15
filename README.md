@@ -1,156 +1,230 @@
-# Análisis estadístico de señales de riesgo en contratación pública española (2019–2025)
+# Procurement Risk Index for Spanish Public Contracting (2019–2025)
+# Índice de Riesgo de Contratación en la Contratación Pública Española (2019–2025)
 
-**Trabajo de Fin de Grado — Grado en Comercio**  
-**Autor:** Jan Calsina Varela  
-**Universidad:** Universidad Complutense de Madrid
-**Tutor:** Arturo Benayas Ayuso
-**Año:** 2026
-
----
-
-## Descripción
-
-Este repositorio contiene los scripts de análisis y visualización desarrollados para el TFG *"Análisis estadístico de señales de riesgo en contratación pública española (2019–2025)"*.
-
-El trabajo construye un **Índice de Riesgo de Contratación (IRC)** sobre un corpus de más de 9,2 millones de registros de adjudicación pública, integrando datos de la Plataforma de Contratación del Sector Público (PLACSP), seis portales autonómicos, el diario oficial europeo TED y el Registro Mercantil (BORME).
-
-El enfoque es estrictamente estadístico y no acusatorio: los indicadores identifican señales y anomalías estadísticas, sin implicar responsabilidad legal de ninguna empresa o entidad.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
+[![Data: Open](https://img.shields.io/badge/data-open%20access-green.svg)](https://github.com/BquantFinance/licitaciones-espana)
 
 ---
 
-## Estructura del repositorio
+## English
+
+### Overview
+
+This repository contains the full analytical pipeline for the Bachelor's thesis:
+
+> **"Análisis estadístico de señales de riesgo en contratación pública española (2019–2025)"**  
+> Jan Calsina Varela · Universidad Complutense de Madrid · 2026  
+> Supervisor: Arturo Benayas Ayuso
+
+The project constructs and validates a **Procurement Risk Index (IRC)** over a corpus of **9,222,246 procurement records** from seven Spanish public contracting sources, covering the period 2019–2025. The index integrates eleven indicators across two blocks: five corporate indicators (derived from the Commercial Registry / BORME) and six behavioral indicators (derived from award records). The analytical unit is taxpayer ID × autonomous community × CPV sector, yielding 1,033,110 groups.
+
+### Key findings
+
+- **Contract type** is the dominant predictor of procurement risk (η²=0.2116, large effect). The autonomous community explains only 0.6% of index variance (η²=0.006, trivial).
+- **HHI concentration (B2)** activates in 20.07% of groups with a homogeneous distribution across all regions (23–29%), indicating a systemic market characteristic rather than a territorial anomaly.
+- **Temporal stability** of the index is robust (Spearman ρ=0.7880 between sub-periods).
+- **Network analysis (F3)** identifies 1,587 award-receiving companies connected through 1,863 shared administrators, with the main component (660 companies) concentrating €10.7 billion in high-IRC awards.
+- **Strategic sectors** (CPV 09, 31, 32, 35) show an IRC mean 18% above the general corpus, but with trivial effect size (η²≤0.0005). The median IRC in strategic sectors (0.080) is substantially higher than the general corpus median (0.000), indicating near-universal signal activation.
+
+### Pipeline diagram
+[Raw data sources]
+PLACSP · TED · BORME · AN · CT · PV · GA · MD · VC
+│
+▼
+[Scripts 01–02: Indicator construction]
+script_01 → Corporate flags F1–F5 (BORME × adjudicatarios)
+script_02 → Behavioral flags B1–B6 (NIF×CCAA×CPV groups)
+│
+▼
+[Script 03: IRC construction]
+IRC = 0.4·Sc + 0.6·SB
+4 variants: irc_base, irc_iguales, irc_comp, irc_corp
+│
+▼
+[Scripts 04–05: Aggregation]
+Territorial · Sectoral · Temporal
+│
+▼
+[Script 06: Bivariate analysis]
+Spearman correlations · Kruskal-Wallis · effect sizes
+│
+▼
+[Script 07: Econometric modelling]
+OLS + Logit · Fixed effects (sector × CCAA × year)
+│
+▼
+[Script 08: Robustness validation]
+V01 weight sensitivity · V02 threshold sensitivity
+V03 temporal stability · V04 TED coherence
+│
+▼
+[Script 09: Network analysis]
+F3 administrator graph · centrality · cluster detection
+│
+▼
+[Script 10: Strategic sectors]
+CPV 09·31·32·35 vs. general corpus
+│
+▼
+[Visualization scripts × 6]
+Figures 1–6 + Annex B·C figures
+
+### Repository structure
 tfg-riesgo-contratacion-publica/
 │
-│
 ├── pipeline/
-│   ├── script_01_calcular_flags_corporativos.py
-│   ├── script_02_calcular_indicadores_comportamiento.py
-│   ├── script_03_calcular_irc.py
-│   ├── script_04_tablas_descriptivas.py
-│   ├── script_05_mapa_territorio_sector.py
-│   ├── script_06_analisis_bivariado.py
-│   ├── script_07_modelos_regresion.py
-│   └── script_08_validaciones_robustez.py
+│   ├── script_01_adjudicatarios_flags.py
+│   ├── script_02_comportamiento_flags.py
+│   ├── script_03_irc_construccion.py
+│   ├── script_04_agregacion.py
+│   ├── script_05_descriptivo_territorial.py
+│   ├── script_06_bivariado.py
+│   ├── script_07_econometrico.py
+│   ├── script_08_robustez.py
+│   ├── script_09_network_analysis.py
+│   └── script_10_sectores_estrategicos.py
 │
 ├── visualization/
-│   ├── figura1_distribucion_irc.py
-│   ├── figura2_irc_territorial.py
-│   ├── figura3_irc_procedimiento.py
-│   ├── figura4_prevalencia_flags.py
-│   ├── figura5_scatter_irc_importe.py
-│   └── figura6_estabilidad_temporal.py
+│   ├── viz_01_flags_prevalencia.py
+│   ├── viz_02_irc_distribucion.py
+│   ├── viz_03_irc_territorial.py
+│   ├── viz_04_procedimiento_boxplot.py
+│   ├── viz_05_importes_scatter.py
+│   └── viz_06_concentracion_robustez.py
 │
-│
-├── requirements.txt                           # Dependencias Python
+├── config.py                  ← set your local data path here
+├── requirements.txt
 └── README.md
 
----
+### Reproduction instructions
 
-## Datos
-
-Los datos **no se incluyen en este repositorio** por su volumen (>9,2 M registros en formato Apache Parquet).
-
-Las fuentes originales son:
-
-| Fuente | Descripción | Repositorio original |
-|--------|-------------|----------------------|
-| PLACSP | Plataforma de Contratación del Sector Público | [licitaciones-espana](https://github.com/BquantFinance/licitaciones-espana) |
-| BORME | Registro Mercantil (actos y cargos societarios) | [licitaciones-espana](https://github.com/BquantFinance/licitaciones-espana) |
-| TED | Tenders Electronic Daily (contratos SARA) | [licitaciones-espana](https://github.com/BquantFinance/licitaciones-espana) |
-| CCAA | Andalucía, Cataluña, Euskadi, Galicia, Madrid, Valencia | [licitaciones-espana](https://github.com/BquantFinance/licitaciones-espana) |
-
-Los datos procesados se encuentran en formato Parquet en soporte externo local con la siguiente estructura:
-Base De Datos TFG JAN/
-├── Base de Datos/
-│   ├── CCAA/          ← Datos autonómicos curados
-│   ├── Nacional/      ← PLACSP, TED, BORME
-│   └── reports/       ← Outputs del pipeline (inputs para visualización)
-└── Documentacion/
-
-Para reproducir el análisis, descarga los datos desde el repositorio de origen y ajusta las rutas en cada script a tu ruta local.
-
----
-
-## Instalación
+**1. Clone the repository**
 ```bash
-git clone https://github.com/jcalsinav/tfg-riesgo-contratacion-publica.git
+git clone https://github.com/jcalsinav/tfg-riesgo-contratacion-publica
 cd tfg-riesgo-contratacion-publica
+```
+
+**2. Install dependencies**
+```bash
 pip install -r requirements.txt
 ```
 
----
+**3. Download the data**
 
-## Uso
+Input data is not distributed in this repository due to size. Download the curated Parquet files from the BQuant Finance public repository:
 
-Ejecuta los scripts del pipeline en orden estricto (01 → 08), ya que cada script consume los outputs del anterior:
-```bash
-python visualization/figura1_distribucion_irc.py
-python visualization/figura2_irc_territorial.py
-# ... etc.
+→ [https://github.com/BquantFinance/licitaciones-espana/releases/latest](https://github.com/BquantFinance/licitaciones-espana/releases/latest)
+
+Required files:
+- `nacional.zip` (PLACSP)
+- `andalucia.zip`
+- `catalunya.zip`
+- `euskadi.zip`
+- `galicia.zip`
+- `comunidad_madrid.zip`
+- `valencia.zip`
+- `borme.zip`
+- `ted.zip`
+
+**4. Configure the data path**
+
+Edit `config.py` and set `BASE_DIR` to your local data directory:
+```python
+BASE_DIR = "/your/path/to/Base De Datos"
 ```
 
-Una vez completado el pipeline, genera las figuras:
+**5. Run the pipeline**
 ```bash
-python visualization/figura1_distribucion_irc.py
-python visualization/figura2_irc_territorial.py
-# ... etc.
+python pipeline/script_01_adjudicatarios_flags.py
+python pipeline/script_02_comportamiento_flags.py
+python pipeline/script_03_irc_construccion.py
+python pipeline/script_04_agregacion.py
+python pipeline/script_05_descriptivo_territorial.py
+python pipeline/script_06_bivariado.py
+python pipeline/script_07_econometrico.py
+python pipeline/script_08_robustez.py
+python pipeline/script_09_network_analysis.py
+python pipeline/script_10_sectores_estrategicos.py
 ```
 
----
+Each script generates a quality report (`*_quality_TIMESTAMP.txt`) in the `reports/` output directory. Scripts must be run in order. Estimated total runtime: 45–90 minutes on a standard laptop with data on external storage.
 
-## Dependencias
-pandas>=1.5
-pyarrow>=10.0
-statsmodels>=0.13
-scipy>=1.9
-matplotlib>=3.6
-seaborn>=0.12
-numpy>=1.23
-geopandas>=0.12
+**6. Generate figures**
+```bash
+python visualization/viz_01_flags_prevalencia.py
+# ... repeat for viz_02 through viz_06
+```
 
----
+### Use cases
 
-## Indicadores del IRC
+**Risk monitoring**  
+The IRC pipeline can be re-run periodically as new procurement data is published (BQuant updates quarterly). Groups crossing the two-flag threshold (5.9% of the corpus) generate a prioritized watchlist for supervisory bodies without requiring manual case selection.
 
-### Bloque corporativo (BORME)
-| Flag | Descripción |
-|------|-------------|
-| F1 | Empresa de constitución reciente (<6 meses antes de primera adjudicación) |
-| F2 | Capital social <10.000€ con importe acumulado >100.000€ |
-| F3 | Administradores compartidos entre empresas adjudicatarias del mismo órgano |
-| F4 | Disolución en <12 meses desde la última adjudicación |
-| F5 | Empresa en situación concursal activa |
+**Integrity analysis**  
+The network analysis module (script_09) identifies clusters of award-receiving companies sharing administrators. These clusters can be used as input for qualitative review of specific procurement segments, particularly in strategic sectors (CPV 09, 31, 32, 35).
 
-### Bloque de comportamiento (PLACSP + CCAA)
-| Flag | Descripción |
-|------|-------------|
-| B1 | Proporción de adjudicaciones con oferta única >50% (mín. 3 contratos) |
-| B2 | Índice HHI por órgano contratante en el percentil 75 del grupo de referencia |
-| B3 | Racha de adjudicaciones consecutivas al mismo NIF sin competencia |
-| B4 | Clustering de importes en banda [13.500–15.000€] o [34.000–40.000€] (>20%) |
-| B5 | Clustering de importes en el 10% inferior al umbral SARA aplicable (>20%) |
-| B6 | Tasa de contratos no menores adjudicados sin publicidad >P75 del grupo |
+**Benchmarking across regions**  
+The territorial aggregation (scripts 04–05) produces comparable IRC rankings across autonomous communities. Researchers can extend coverage to additional regional portals by adding a source script following the existing pipeline conventions.
 
----
+**Policy evaluation**  
+The temporal stability module (script_08, V03) allows comparison of IRC distributions across sub-periods. This can be used to evaluate whether regulatory changes (e.g. LCSP 2017 amendments) produced measurable effects on risk signal patterns.
 
-## Resultados principales
+### Technical requirements
 
-- **Corpus**: 9.222.246 registros · 477.926 adjudicatarios únicos · 1.033.110 grupos NIF×CCAA×CPV
-- **IRC medio**: 0,0612 · P75: 0,10 · Máximo: 0,66
-- **Factor con mayor efecto sobre IRC**: tipo de procedimiento (η²=0,1934, efecto GRANDE)
-- **Estabilidad temporal**: ρ=0,8070 entre subperíodos 2019–2021 y 2022–2025 (umbral ≥0,70)
-- **Predictor principal**: β(B1_ratio)=0,01087 > β(log_importe)=0,00961 en modelo MCO
+| Component | Specification |
+|---|---|
+| Language | Python 3.10+ |
+| Key libraries | pandas, numpy, statsmodels, scipy, networkx, matplotlib, seaborn |
+| Data format | Apache Parquet (columnar binary) |
+| OS | macOS / Linux (Windows compatible with path adjustments) |
+
+### Citation
+Calsina Varela, J. (2026). Análisis estadístico de señales de riesgo en
+contratación pública española (2019–2025) [Bachelor's thesis].
+Universidad Complutense de Madrid.
+https://github.com/jcalsinav/tfg-riesgo-contratacion-publica
+
+### License
+
+MIT License. Input data is subject to the open data reuse conditions of the Spanish Government ([datos.gob.es](https://datos.gob.es/es/aviso-legal)) and the EU Open Data Licence ([data.europa.eu](https://data.europa.eu/eli/dec_impl/2011/833/oj)).
 
 ---
 
-## Referencia de datos originales
+## Español
 
-Sánchez Vidal, G. (2024). *licitaciones-espana: Dataset unificado de contratación pública española*. BQuant Finance. https://github.com/BquantFinance/licitaciones-espana
+### Descripción
 
----
+Este repositorio contiene el pipeline analítico completo del Trabajo de Fin de Grado:
 
-## Licencia
+> **"Análisis estadístico de señales de riesgo en contratación pública española (2019–2025)"**  
+> Jan Calsina Varela · Universidad Complutense de Madrid · 2026  
+> Tutor: Arturo Benayas Ayuso
 
-MIT License. Ver [LICENSE](LICENSE) para más detalles.
+El proyecto construye y valida un **Índice de Riesgo de Contratación (IRC)** sobre un corpus de **9.222.246 registros** procedentes de siete fuentes de contratación pública española, para el período 2019–2025. El índice integra once indicadores en dos bloques: cinco corporativos (a partir del BORME) y seis de comportamiento licitatorio (a partir de los registros de adjudicación). La unidad de análisis es NIF adjudicatario × comunidad autónoma × sector CPV, con 1.033.110 grupos.
 
-> **Nota ética**: Este trabajo opera exclusivamente con datos públicos bajo licencias de reutilización. Todos los hallazgos son estadísticos y no implican responsabilidad legal de ninguna entidad. Los análisis BORME operan sobre datos agregados sin referencia a personas físicas identificables.
+### Hallazgos principales
+
+- El **tipo de contrato** es el predictor dominante del riesgo (η²=0,2116, efecto grande). La comunidad autónoma explica solo el 0,6% de la varianza del IRC (efecto trivial).
+- El indicador de **concentración HHI (B2)** se activa en el 20,07% de los grupos con distribución homogénea entre territorios (23–29%), lo que indica una característica sistémica del mercado.
+- La **estabilidad temporal** del índice es robusta (ρ de Spearman=0,7880 entre subperíodos).
+- El **análisis de redes (F3)** identifica 1.587 empresas adjudicatarias conectadas por 1.863 administradores compartidos; el componente principal (660 empresas) concentra 10.699 M€ en adjudicaciones con IRC alto.
+- Los **sectores estratégicos** (CPV 09, 31, 32, 35) presentan un IRC medio un 18% superior al corpus general, con tamaño del efecto trivial pero mediana desplazada (0,080 vs 0,000).
+
+### Instrucciones de reproducción
+
+Ver sección en inglés (idéntico procedimiento). Ajustar la ruta local en `config.py`.
+
+### Casos de uso
+
+**Monitorización de riesgos** — El pipeline puede re-ejecutarse periódicamente conforme se publican nuevos datos. Los grupos que cruzan el umbral de dos flags simultáneos generan una lista de priorización para organismos supervisores.
+
+**Análisis de integridad** — El módulo de análisis de redes (script_09) identifica clusters de empresas adjudicatarias con administradores comunes, utilizables como input para revisión cualitativa en sectores estratégicos.
+
+**Evaluación de políticas** — El módulo de estabilidad temporal (script_08) permite comparar distribuciones del IRC entre subperíodos para evaluar el efecto de cambios normativos.
+
+### Cita
+Calsina Varela, J. (2026). Análisis estadístico de señales de riesgo en
+contratación pública española (2019–2025) [Trabajo de Fin de Grado].
+Universidad Complutense de Madrid.
+https://github.com/jcalsinav/tfg-riesgo-contratacion-publica
